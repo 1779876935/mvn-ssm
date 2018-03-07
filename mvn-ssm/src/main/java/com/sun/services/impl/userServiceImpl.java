@@ -1,5 +1,7 @@
 package com.sun.services.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +18,12 @@ public class userServiceImpl implements userService {
 	public User getUserById(Integer id) {
 		User user = userMapper.selectByPrimaryKey(id);
 		return user;
+	}
+	@Override
+	public List<User> getusers() {
+		List<User> users = userMapper.getAllUsers();
+		
+		return users;
 	}
 	
 }

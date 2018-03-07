@@ -1,5 +1,7 @@
 package com.sun.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -8,7 +10,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
+import com.mysql.fabric.xmlrpc.base.Value;
 import com.sun.entity.User;
 import com.sun.services.userService;
 
@@ -18,14 +23,24 @@ public class userController {
 	@Resource
 	private userService userService;
 	
-	@RequestMapping(value = "/test",method = RequestMethod.GET)
+	@RequestMapping(value = "/test",method = RequestMethod.POST)
+	@ResponseBody
 	public String test(@RequestParam("uid") int uid,HttpServletRequest request,Model model){
 		User user = userService.getUserById(uid);
+		String userString = JSON.toJSONString(user);
 		if (user == null) {
 			return "error";
 		}
 		request.setAttribute("name", user.getUserName());
 		model.addAttribute("name",user.getUserName());
-		return "success";
+		return userString;
+	}
+	
+	@RequestMapping(value = "/users")
+	@ResponseBody
+	public String users(HttpServletRequest request,Model model){
+		List<User> users = userService.getusers();
+		String userString = JSON.toJSONString(users);
+		return userString;
 	}
 }

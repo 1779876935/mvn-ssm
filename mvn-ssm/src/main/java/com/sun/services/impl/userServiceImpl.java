@@ -25,5 +25,20 @@ public class userServiceImpl implements userService {
 		
 		return users;
 	}
+	@Override
+	public List<User> getUserByLikeName(String name) {
+		List<User> userByLikeName = userMapper.getUserByLikeName(name);
+		return userByLikeName;
+	}
+	@Override
+	public int saveUser(User user) {
+		int saveInt = userMapper.insert(user);
+		return saveInt;
+	}
+	@Override
+	public int updateByPrimaryKeySelective(User user) {
+		int i = userMapper.updateByPrimaryKeySelective(user);
+		return i;
+	}
 	
 }

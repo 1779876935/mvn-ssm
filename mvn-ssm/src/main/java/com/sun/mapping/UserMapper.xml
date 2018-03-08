@@ -27,6 +27,9 @@
       #{age,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.sun.entity.User" >
+  	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  	select LAST_INSERT_ID()
+  	</selectKey>
     insert into user_t
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -84,4 +87,11 @@
     <include refid="Base_Column_List" />
     from user_t
   </select>
+  
+  <select id="getUserByLikeName" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	 select 
+    <include refid="Base_Column_List" />
+    from user_t where user_name like '%${value}%'
+  </select>
+  
 </mapper>

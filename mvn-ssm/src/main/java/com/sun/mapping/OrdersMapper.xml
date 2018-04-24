@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sun.dao.OrdersMapper" >
+	
+	<resultMap id="userMap" type="user">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="age" property="age" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List" >
+    id, user_name, password, age
+  </sql>
+  <resultMap id="BaseResultMap" type="orders" >
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="order_address" property="orderAddress" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="BaseResultMapCust" type="orderCust" >
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="order_address" property="orderAddress" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+  </resultMap>
+  
+  <sql id="orders">user_id,order_address</sql>
+  
+  <insert id="insert" parameterType="orders" >
+    insert into orders (user_id, order_address)
+    values (#{userId,jdbcType=VARCHAR}, #{orderAddress,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="orders" >
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_name,
+      </if>
+      <if test="orderAddress != null" >
+        order_address,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderAddress != null" >
+        #{orderAddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="getOrderInf" resultType="orderCust">
+  	SELECT 
+  		o.user_id as "userId",
+  		o.order_address as "orderAddress",
+  		u.user_name as "userName"
+  	FROM
+  		orders o, user_t u 
+  	WHERE u.id = o.user_id 
+	  
+  </select>
+  
+  <resultMap id="userOrderMap" type="orderInf" >
+  	<id column="order_id" property="orderId"/>
+  	<result column="user_id" property="userId"/>
+  	<result column="order_address" property="orderAddress"/>
+   	<association property="user" javaType="user" column="user_id" select="getUser">
+  		<id column="id" property="id" jdbcType="INTEGER" />
+	    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+	    <result column="password" property="password" jdbcType="VARCHAR" />
+	    <result column="age" property="age" jdbcType="INTEGER" />
+  	</association>
+  	
+  </resultMap>
+  <select id="getUser" parameterType="int" resultMap="userMap">
+  	select <include refid="Base_Column_List"></include> from user_t  where id = #{userId}
+  </select>
+  <select id="getOrderInf2" resultMap="userOrderMap">
+  	SELECT 
+  		o.*,u.*
+  	FROM
+  		orders o, user_t u 
+  	WHERE u.id = o.user_id 
+	  
+  </select>
+  
+</mapper>

@@ -6,15 +6,25 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
-<link href="${ctx}/script/bootstrap-3.3.7-dist/css/bootstrap.min.css"
-	rel="stylesheet">
+<title>Error</title>
+<!-- Bootstrap core CSS -->
+<link href="${ctx}/script/css/bootstrap.css" rel="stylesheet">
+
+<!-- Add custom CSS here -->
+<link href="${ctx}/script/css/sb-admin.css" rel="stylesheet">
+<link rel="stylesheet" href="${ctx}/script/font-awesome/css/font-awesome.min.css">
+<!-- Page Specific CSS -->
+<link rel="stylesheet" href="${ctx}/script/css/morris-0.4.3.min.css">
+<script src="${ctx}/script/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="${ctx}/script/js/jquery-1.10.2.js"></script>
+<script src="${ctx}/script/js/bootstrap.js"></script>
+<!-- Page Specific Plugins -->    <script src="js/raphael-min.js"></script>
+<script src="${ctx}/script/js/morris-0.4.3.min.js"></script>
+<script src="${ctx}/script/js/morris/chart-data-morris.js"></script>
+<script src="${ctx}/script/js/tablesorter/jquery.tablesorter.js"></script>
+<script src="${ctx}/script/js/tablesorter/tables.js"></script>
 </head>
 <body>
 <h1><em>出现错误</em></h1>
 </body>
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="${ctx}/script/Jquery/jquery-3.0.0.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="${ctx}/script/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 </html>

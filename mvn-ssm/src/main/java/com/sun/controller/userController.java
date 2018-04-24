@@ -1,5 +1,6 @@
 package com.sun.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,6 +18,8 @@ import org.springframework.web.context.support.HttpRequestHandlerServlet;
 import com.alibaba.fastjson.JSON;
 import com.mysql.fabric.xmlrpc.base.Value;
 import com.sun.entity.User;
+import com.sun.entity.UserVo;
+import com.sun.org.apache.xpath.internal.operations.And;
 import com.sun.services.userService;
 import com.sun.utils.UtilsOfStr;
 
@@ -50,7 +53,21 @@ public class userController {
 	@RequestMapping(value = "/getUserLikeName")
 	@ResponseBody
 	public String getUserLikeName(@RequestParam("likeName") String likeName,HttpServletRequest request,Model model){
+		String id = (String)request.getParameter("id");
 		List<User> userByLikeName = userService.getUserByLikeName(likeName);
+		return UtilsOfStr.getJsonStr4obj(userByLikeName);
+	}
+	@RequestMapping(value = "/getUserByPojo")
+	@ResponseBody
+	public String getUserByPojo(HttpServletRequest request,Model model){
+		String id = (String)request.getParameter("id");
+		String username =(String) request.getParameter("username");
+		User user = new User();
+		user.setUserName(username);
+		if (null != id && !"".equals(id)) {
+			user.setId(Integer.parseInt(id));
+		}
+		List<User> userByLikeName = userService.getUsersByPojo(user);
 		return UtilsOfStr.getJsonStr4obj(userByLikeName);
 	}
 	
@@ -63,5 +80,24 @@ public class userController {
 		System.out.println(user.toString());
 		int i = userService.updateByPrimaryKeySelective(user);
 		return String.valueOf(i);
+		}
+	/**
+	 * 
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/getUserFromIdListOrVo")
+	@ResponseBody
+	public String getUserFromIdList(HttpServletRequest request,Model model){
+		String id = request.getParameter("ids");
+		List<Integer> ids = new ArrayList<Integer>();
+		for (String idtmp:id.split(",")) {
+			ids.add(Integer.parseInt(idtmp));
+		}
+		UserVo userVo = new UserVo();
+		userVo.setIds(ids);
+		List<User> userFromIdList = userService.getUserFromVo(userVo);
+		return UtilsOfStr.getJsonStr4obj(userFromIdList);
 		}
 }

@@ -16,8 +16,24 @@
    <context:component-scan base-package="com.sun.controller" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
-   
-     <mvc:annotation-driven />
+    <!-- 解决返回中文JSON时乱码问题 -->
+       <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">  
+            <property name="messageConverters">  
+                <list>  
+                    <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">  
+                        <property name="writeAcceptCharset" value="false" /> <!--  用于避免响应头过大  -->  
+                        <property name="supportedMediaTypes">  
+                            <list>  
+                                <value>application/json;charset=UTF-8</value>  
+                            </list>  
+                        </property>  
+                    </bean>  
+                    <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />  
+                </list>  
+            </property>  
+        </bean>  
+    <mvc:annotation-driven/>
+      
 
       <!-- 内容协商管理器  -->
     <!--1、首先检查路径扩展名（如my.pdf）；

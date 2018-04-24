@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sun.dao.UserMapper" >
-  <resultMap id="BaseResultMap" type="com.sun.entity.User" >
+  <resultMap id="BaseResultMap" type="user" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
@@ -10,24 +10,24 @@
   <sql id="Base_Column_List" >
     id, user_name, password, age
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int" >
     select 
     <include refid="Base_Column_List" />
     from user_t
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="int" >
     delete from user_t
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.sun.entity.User" >
+  <insert id="insert" parameterType="user" >
     insert into user_t (id, user_name, password, 
       age)
     values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{age,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.sun.entity.User" >
-  	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insertSelective" parameterType="user" >
+  	<selectKey keyProperty="id" order="AFTER" resultType="int">
   	select LAST_INSERT_ID()
   	</selectKey>
     insert into user_t
@@ -60,7 +60,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.sun.entity.User" >
+  <update id="updateByPrimaryKeySelective" parameterType="user" >
     update user_t
     <set >
       <if test="userName != null" >
@@ -75,7 +75,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.sun.entity.User" >
+  <update id="updateByPrimaryKey" parameterType="user" >
     update user_t
     set user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
@@ -88,10 +88,47 @@
     from user_t
   </select>
   
-  <select id="getUserByLikeName" parameterType="java.lang.String" resultMap="BaseResultMap">
+  <select id="getUserByLikeName" parameterType="string" resultMap="BaseResultMap">
   	 select 
     <include refid="Base_Column_List" />
     from user_t where user_name like '%${value}%'
+  </select>
+  
+  <!-- POJO作为参数进行查询 -->
+  <select id="getUsersByPojo" parameterType="user" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List"></include>
+  	from user_t
+  	<where>
+  		
+	  		<if test="id != null and id != ''">
+	  		and id = #{id,jdbcType=INTEGER}
+	  		</if>
+	  		<trim prefixOverrides="and">
+		  		<if test="userName != null and userName != ''">
+		  		and	user_name like '%${userName}%'
+		  		</if>
+  			</trim>
+  	</where>
+  </select>
+  
+  <!-- 用list作为输入参数 -->
+  <select id="getUserFromIdList" parameterType="list" resultMap="BaseResultMap">
+  	select * from user_t
+  	<where>
+  		<foreach collection="list" open="and id in (" close=")" item="id" separator=",">
+  			#{id}
+  		</foreach>
+  	</where>
+  </select>
+  
+  <select id="getUserFromVo" parameterType="userVo" resultMap="BaseResultMap">
+  	select * from user_t
+  	<where>
+  		<foreach collection="ids" open="and id in(" item="id" close=")" separator=",">
+  			#{id}
+  		</foreach>
+  	</where>
   </select>
   
 </mapper>

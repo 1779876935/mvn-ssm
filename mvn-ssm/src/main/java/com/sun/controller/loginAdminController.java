@@ -14,4 +14,9 @@ public class loginAdminController {
 		
 		return null;
 	}
+
+	@RequestMapping("/git")
+	public String gitTest(){
+		return "gitTest";
+	}
 }

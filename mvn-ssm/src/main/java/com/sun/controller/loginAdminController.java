@@ -17,6 +17,6 @@ public class loginAdminController {
 
 	@RequestMapping("/git")
 	public String gitTest(){
-		return "gitTest";
+		return "gitTest" + "dev --> master";
 	}
 }
